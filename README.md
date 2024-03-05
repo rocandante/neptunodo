@@ -1,9 +1,10 @@
-# A neptunodo Flet app
+# Neptunodo To Do App
 
-An example of a minimal Flet app.
+Is a simple app make on Flet framework with Python.
 
 To run the app:
 
 ```
 flet run [app_directory]
 ```
+
