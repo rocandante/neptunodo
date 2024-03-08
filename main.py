@@ -18,9 +18,13 @@ class TodoApp(ft.UserControl):
         self.todos = None
 
     def build(self):
-        self.newtodo = ft.TextField(label="Agregar tarea", hint_text="Qué tienes por hacer?", expand=True, autofocus=True)
+        self.newtodo = ft.TextField(
+            label="Agregar tarea",
+            hint_text="Qué tienes por hacer?",
+            expand=True,
+            autofocus=True)
         self.todos = ft.Column(
-            # self.show_todos()
+            self.show_todos()
         )
 
         return ft.Column(
@@ -67,7 +71,7 @@ class MainPage(ft.SafeArea):
         self.page = page
 
         # Define el encabezado
-        self.title: ft.Text = ft.Text("Neptunodo", size=20, weight="w800")
+        self.title: ft.Text = ft.Text("Neptunodo", size=20, weight=ft.FontWeight.W_800)
         self.toggle: ft.IconButton = ft.IconButton(
             **toggle_style_sheet, on_click=lambda e: self.switch(e)
         )
