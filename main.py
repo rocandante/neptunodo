@@ -16,6 +16,7 @@ class TodoApp(ft.UserControl):
         super().__init__()
         self.newtodo = ft.TextField
         self.todos = None
+        self.counter: ft.Text = ft.Text(value="0 tareas activas", italic=True)
 
     def build(self):
         self.newtodo = ft.TextField(
@@ -46,6 +47,9 @@ class TodoApp(ft.UserControl):
         )
 
     def add_item(self, e):
+        """
+        Agrega nuevos objetos checkbox a todos.controls
+        """
         if not self.newtodo.value:
             self.newtodo.error_text = "Por favor escribe una tarea"
             self.newtodo.focus()
@@ -56,7 +60,23 @@ class TodoApp(ft.UserControl):
             self.newtodo.value = ""
             self.newtodo.error_text = None
             self.newtodo.focus()
+
+            self.count_todos()
+
             self.update()
+
+    def count_todos(self):
+        """
+        Cuenta cuantos controles hay en el objeto self.todos.controls
+        Returns: len(self.todos.controls)
+
+        """
+        if len(self.todos.controls[:]) == 1:
+            self.counter.value = f"{len(self.todos.controls[:])} tareas activas"
+        else:
+            self.counter.value = f"{len(self.todos.controls[:])} tareas activas"
+
+        self.counter.update()
 
     def show_todos(self):
         pass
@@ -76,6 +96,7 @@ class MainPage(ft.SafeArea):
             **toggle_style_sheet, on_click=lambda e: self.switch(e)
         )
         self.todos = TodoApp()
+
         self.main: ft.Column = ft.Column(
             controls=[
                 ft.Row(
@@ -83,7 +104,14 @@ class MainPage(ft.SafeArea):
                     controls=[self.title, self.toggle],
                 ),
                 ft.Divider(height=20),
-                self.todos
+                self.todos,
+                ft.Divider(height=20),
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    controls=[
+                        self.todos.counter
+                    ]
+                )
             ]
         )
 
@@ -104,7 +132,6 @@ class MainPage(ft.SafeArea):
 def main(page: ft.Page):
     page.title = "Neptunodo ToDo App"
     page.window_maximizable = False
-    # page.horizontal_alignment = ft.MainAxisAlignment.CENTER
 
     # Establece el tema por defecto
     page.theme_mode = ft.ThemeMode.LIGHT
