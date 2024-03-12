@@ -16,7 +16,7 @@ class TodoApp(ft.UserControl):
         super().__init__()
         self.newtodo = ft.TextField
         self.todos = None
-        self.counter: ft.Text = ft.Text(value="0 tareas activas", italic=True)
+        self.counter: ft.Text = ft.Text(value="0 tareas", italic=True)
 
     def build(self):
         self.newtodo = ft.TextField(
@@ -72,9 +72,9 @@ class TodoApp(ft.UserControl):
 
         """
         if len(self.todos.controls[:]) == 1:
-            self.counter.value = f"{len(self.todos.controls[:])} tareas activas"
+            self.counter.value = f"{len(self.todos.controls[:])} tareas"
         else:
-            self.counter.value = f"{len(self.todos.controls[:])} tareas activas"
+            self.counter.value = f"{len(self.todos.controls[:])} tareas"
 
         self.counter.update()
 
