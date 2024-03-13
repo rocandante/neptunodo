@@ -48,12 +48,27 @@ class TodoItem(ft.UserControl):
         return ft.Column(controls=[self.view])
 
     def status_changed(self, e):
-
+        # Agrega el estilo al texto (label) del Checkbox de acuerdo a su estado
         if e.control.value is True:
             self.item.label_style = ft.TextStyle(decoration=ft.TextDecoration.LINE_THROUGH, decoration_thickness=2)
         else:
             self.item.label_style = ft.TextStyle()
 
+        # Guarda el estado en el archivo cvs en item correspondiente
+        # Se asume que no hay dos item con el mismo nombre
+        todos = co.leer_csv()
+        i = 0
+        for todo in todos:
+            if todo["todo"] == e.control.label:
+                todos[i] = {'todo': e.control.label, 'completed': e.control.value}
+                break
+            i += 1
+
+        # guarda la nueva lista de tareas
+        co.escribir_cvs(todos)
+
+        # Establece el valor del control
+        self.value = e.control.value
         self.item.update()
 
     def delete_clicked(self, e):
@@ -167,6 +182,12 @@ class TodoApp(ft.UserControl):
         self.count_todos()
         self.update()
 
+    def clear_clicked(self, e):
+        for task in self.todos.controls[:]:
+            print(task.value)
+            if task.value is True:
+                self.delete_item(task)
+
 
 class MainPage(ft.SafeArea):
     """
@@ -195,7 +216,10 @@ class MainPage(ft.SafeArea):
                 ft.Row(
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     controls=[
-                        self.todos.counter
+                        self.todos.counter,
+                        ft.OutlinedButton(
+                            text="Limpiar Completadas", on_click=self.todos.clear_clicked
+                        )
                     ]
                 )
             ]
