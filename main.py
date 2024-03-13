@@ -11,6 +11,30 @@ _light: str = ft.colors.with_opacity(1, "black")
 toggle_style_sheet: dict = {"icon": ft.icons.DARK_MODE_ROUNDED, "icon_size": 18}
 
 
+class TodoItem(ft.UserControl):
+    """
+    Clase para crear y gestionar los item (tarea) que se agregan desde TodoApp
+    """
+    def __init__(self, value, label):
+        super().__init__()
+        self.value = value
+        self.label = label
+        self.item = ft.Checkbox
+        self.view = None
+
+    def build(self):
+        self.item = ft.Checkbox(value=self.value, label=self.label)
+        self.view = ft.Row(
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                self.item
+            ]
+        )
+
+        return ft.Column(controls=[self.view])
+
+
 class TodoApp(ft.UserControl):
     def __init__(self):
         super().__init__()
@@ -55,7 +79,8 @@ class TodoApp(ft.UserControl):
             self.newtodo.focus()
             self.update()
         else:
-            todo: ft.Checkbox = ft.Checkbox(label=str(self.newtodo.value))
+            # Llama a la clase TodoItem
+            todo = TodoItem(False, self.newtodo.value)
             self.todos.controls.append(todo)
             self.newtodo.value = ""
             self.newtodo.error_text = None
