@@ -13,16 +13,20 @@ class TodoItem(ft.UserControl):
     """
     Clase para crear y gestionar los item (tarea) que se agregan desde TodoApp
     """
-    def __init__(self, value, label, delete_item):
+    def __init__(self, value, label, delete_item, decoration=ft.TextDecoration.NONE, decoration_thickness=0):
         super().__init__()
         self.value = value
         self.label = label
         self.item = ft.Checkbox
         self.view = None
         self.delete_item = delete_item
+        self.decoration: ft.TextDecoration = decoration
+        self.decoration_thickness = decoration_thickness
 
     def build(self):
         self.item = ft.Checkbox(value=self.value, label=self.label, on_change=self.status_changed)
+        self.item.label_style = ft.TextStyle(decoration=self.decoration, decoration_thickness=self.decoration_thickness)
+
         self.view = ft.Row(
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
@@ -128,7 +132,11 @@ class TodoApp(ft.UserControl):
         controls = []
 
         for item in todos:
-            todo = TodoItem(item["completed"], item["todo"], self.delete_item)
+            if eval(item["completed"]) is True:
+                todo = TodoItem(eval(item["completed"]), item["todo"], self.delete_item, ft.TextDecoration.LINE_THROUGH, 2)
+            else:
+                todo = TodoItem(eval(item["completed"]), item["todo"], self.delete_item)
+
             self.todos.controls.append(todo)
 
         if len(todos[:]) == 1:
