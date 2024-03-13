@@ -102,6 +102,8 @@ class TodoApp(ft.UserControl):
                 ),
                 ft.Column(
                     spacing=25,
+                    height=400,
+                    scroll=ft.ScrollMode.AUTO,
                     controls=[
                         self.todos
                     ]
@@ -150,11 +152,11 @@ class TodoApp(ft.UserControl):
 
     def show_todos(self):
         todos = co.leer_csv()
-        controls = []
 
         for item in todos:
             if eval(item["completed"]) is True:
-                todo = TodoItem(eval(item["completed"]), item["todo"], self.delete_item, ft.TextDecoration.LINE_THROUGH, 2)
+                todo = TodoItem(eval(item["completed"]), item["todo"],
+                                self.delete_item, ft.TextDecoration.LINE_THROUGH, 2)
             else:
                 todo = TodoItem(eval(item["completed"]), item["todo"], self.delete_item)
 
@@ -255,6 +257,9 @@ def main(page: ft.Page):
     # page.window_resizable = False
     page.window_width = "390"
     page.window_max_width = "400"
+
+    page.update()
+    page.window_width = "390"
     page.update()
 
 
