@@ -12,12 +12,13 @@ class TodoItem(ft.UserControl):
     """
     Clase para crear y gestionar los item (tarea) que se agregan desde TodoApp
     """
-    def __init__(self, value, label):
+    def __init__(self, value, label, delete_item):
         super().__init__()
         self.value = value
         self.label = label
         self.item = ft.Checkbox
         self.view = None
+        self.delete_item = delete_item
 
     def build(self):
         self.item = ft.Checkbox(value=self.value, label=self.label, on_change=self.status_changed)
@@ -25,7 +26,17 @@ class TodoItem(ft.UserControl):
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
             controls=[
-                self.item
+                self.item,
+                ft.Row(
+                    spacing=0,
+                    controls=[
+                        ft.IconButton(
+                            icon=ft.icons.DELETE_OUTLINE,
+                            tooltip="Borrar tarea",
+                            on_click=self.delete_clicked
+                        )
+                    ]
+                )
             ]
         )
 
@@ -39,6 +50,9 @@ class TodoItem(ft.UserControl):
             self.item.label_style = ft.TextStyle()
 
         self.item.update()
+
+    def delete_clicked(self, e):
+        self.delete_item(self)
 
 
 class TodoApp(ft.UserControl):
@@ -86,7 +100,7 @@ class TodoApp(ft.UserControl):
             self.update()
         else:
             # Llama a la clase TodoItem
-            todo = TodoItem(False, self.newtodo.value)
+            todo = TodoItem(False, self.newtodo.value, self.delete_item)
             self.todos.controls.append(todo)
             self.newtodo.value = ""
             self.newtodo.error_text = None
@@ -111,6 +125,11 @@ class TodoApp(ft.UserControl):
 
     def show_todos(self):
         pass
+
+    def delete_item(self, todo):
+        self.todos.controls.remove(todo)
+        self.count_todos()
+        self.update()
 
 
 class MainPage(ft.SafeArea):
