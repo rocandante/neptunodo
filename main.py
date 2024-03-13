@@ -3,6 +3,7 @@ Neptunodo is a simple ToDo app in Python + Flet
 """
 
 import flet as ft
+import csv_operations as co
 
 # Define los estilos para el tema light/dark
 toggle_style_sheet: dict = {"icon": ft.icons.DARK_MODE_ROUNDED, "icon_size": 18}
@@ -68,9 +69,8 @@ class TodoApp(ft.UserControl):
             hint_text="Qué tienes por hacer?",
             expand=True,
             autofocus=True)
-        self.todos = ft.Column(
-            self.show_todos()
-        )
+        self.todos = ft.Column()
+        self.show_todos()
 
         return ft.Column(
             width=390,
@@ -124,7 +124,17 @@ class TodoApp(ft.UserControl):
         self.counter.update()
 
     def show_todos(self):
-        pass
+        todos = co.leer_csv()
+        controls = []
+
+        for item in todos:
+            todo = TodoItem(item["completed"], item["todo"], self.delete_item)
+            self.todos.controls.append(todo)
+
+        if len(todos[:]) == 1:
+            self.counter.value = f"{len(todos[:])} tareas"
+        else:
+            self.counter.value = f"{len(todos[:])} tareas"
 
     def delete_item(self, todo):
         self.todos.controls.remove(todo)
