@@ -106,6 +106,12 @@ class TodoApp(ft.UserControl):
             # Llama a la clase TodoItem
             todo = TodoItem(False, self.newtodo.value, self.delete_item)
             self.todos.controls.append(todo)
+
+            # Agrega el nuevo item al archivo cvs
+            todo = [[self.newtodo.value, "False"]]
+            co.agregar_item(todo)
+
+            # Limpia los controles
             self.newtodo.value = ""
             self.newtodo.error_text = None
             self.newtodo.focus()
@@ -145,6 +151,18 @@ class TodoApp(ft.UserControl):
             self.counter.value = f"{len(todos[:])} tareas"
 
     def delete_item(self, todo):
+        # Eliminar el item en el archivo cvs
+        # Se asume que no hay dos tareas con el mismo nombre
+        todos = co.leer_csv()
+        i = 0
+        for item in todos:
+            if item["todo"] == todo.label:
+                todos.pop(i)
+                break
+            i += 1
+
+        co.escribir_cvs(todos)
+
         self.todos.controls.remove(todo)
         self.count_todos()
         self.update()
