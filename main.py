@@ -5,9 +5,6 @@ Neptunodo is a simple ToDo app in Python + Flet
 import flet as ft
 
 # Define los estilos para el tema light/dark
-_dark: str = ft.colors.with_opacity(0.5, "white")
-_light: str = ft.colors.with_opacity(1, "black")
-
 toggle_style_sheet: dict = {"icon": ft.icons.DARK_MODE_ROUNDED, "icon_size": 18}
 
 
@@ -23,7 +20,7 @@ class TodoItem(ft.UserControl):
         self.view = None
 
     def build(self):
-        self.item = ft.Checkbox(value=self.value, label=self.label)
+        self.item = ft.Checkbox(value=self.value, label=self.label, on_change=self.status_changed)
         self.view = ft.Row(
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
@@ -33,6 +30,15 @@ class TodoItem(ft.UserControl):
         )
 
         return ft.Column(controls=[self.view])
+
+    def status_changed(self, e):
+
+        if e.control.value is True:
+            self.item.label_style = ft.TextStyle(decoration=ft.TextDecoration.LINE_THROUGH, decoration_thickness=2)
+        else:
+            self.item.label_style = ft.TextStyle()
+
+        self.item.update()
 
 
 class TodoApp(ft.UserControl):
